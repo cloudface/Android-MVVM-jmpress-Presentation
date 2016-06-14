@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>jmpress.js | simple example</title>
+
+	<meta name="description" content="jmpress.js is a jQuery plugin to build a website on the infinite canvas">
+	<meta name="author" content="Kyle Robinson Young @shama & Tobias Koppers @sokra" />
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1.0, user-scalable=yes" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<link href="css/common.css" rel="stylesheet" type="text/css" />
+	<link href="css/diagrams.css" rel="stylesheet" type="text/css" />
+	<link href="css/screenshots.css" rel="stylesheet" type="text/css" />
+	<link href="css/code_formatting.css" rel="stylesheet" type="text/css" />
+	<link href="css/animations.css" rel="stylesheet" type="text/css" />	
+	<link href="css/prettify.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="js/movement.js"></script>
+	<script type="text/javascript" src="js/positioning.js"></script>	
+	<script type="text/javascript" src="../jmpress/test/libs/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../jmpress/dist/jmpress.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+<body>
+
+<div id="jmpress">
+	<div id="title" class="step" data-x="0" data-y="0" data-z="0"><h1>Databinding and MVVM in Android</h1></div>
+	<div id="infoNoser" class="step">
+		<h2>About me</h2>
+		<p>TODO: Info about Noser</p>
+	</div>
+	<div id="step3" class="step">
+		<div class="diagram"><img src="img/diagrams/activity_fragment.png"/></div>
+	</div>
+    <div id="no_mvvm_snippet" class="step">
+    	<pre class="prettyprint lang-java">
+    public void onSearch(String searchString) {
+        <span data-jmpress="fade">if(searchString != null && !searchString.isEmpty()){
+            <span data-jmpress="fade">mProgressBar.setVisibility(View.VISIBLE);</span>
+            <span data-jmpress="fade">// Check if no view has focus
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getActivity().
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }</span>
+            <span data-jmpress="fade">mSearchRepository.search(searchString, this);</span>
+        }</span>
+    }
+		</pre>
+    </div>
+    <div id="step5" class="step">
+    	<div class="diagram"><img src="img/diagrams/mvvm.png"/></div>
+    </div>
+    <div id="mvp_snippet_fragment" class="step">
+    	<p>Activity/Fragment:</p>
+    	<pre class="prettyprint lang-java">
+    mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+         @Override
+         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+             <span data-jmpress="fade">if (actionId == EditorInfo.IME_ACTION_SEARCH) { 
+                <span data-jmpress="fade">mViewModel.onSearch(mSearchEditText.getText().toString()); 
+                return true; </span>
+            }
+             return false; </span>
+        } 
+    });
+    	</pre>
+    </div>
+    <div id="mvp_snippet_viewmodel" class="step">
+    	<p>ViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    public void onSearch(String searchString) {
+        <span data-jmpress="fade">if(searchString != null && !searchString.isEmpty()){
+            <span data-jmpress="fade">mSearchView.showProgressBar();</span>
+            <span data-jmpress="fade">mSearchView.hideKeyboard();</span>
+            <span data-jmpress="fade">mSearchRepository.search(searchString, this);</span>
+        }</span>
+    }
+    	</pre>
+    </div>
+    <div id="step8" class="step">
+    	<div class="diagram"><img src="img/diagrams/mvvm_complete.png"/></div>
+    </div>
+    <div id="step9" class="step">
+    	<div class="screenshot"><img src="img/screenshots/search.png"/></div>
+    </div>
+    <div id="step10" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist.png"/></div>
+    </div>
+    <div id="step11" class="step">
+    	<div class="screenshot"><img src="img/screenshots/register.png"/></div>
+    </div>
+    <div id="step12" class="step">
+    	<div class="diagram"><img src="img/diagrams/settings.png"/></div>
+    </div>
+    <div id="snippet_properties_settingsVm" class="step">
+		<p>SettingsViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    @Bindable
+    private boolean mUserRegistered;
+
+    @Bindable
+    private boolean loading;
+
+    @Bindable
+    private boolean editing;
+
+    @Bindable
+    private UserModel user;
+
+    @Bindable
+    private boolean settingsUpdated;
+
+    @Bindable
+    private boolean settingsUpdateSuccessful;
+
+    @Bindable
+    private String settingsUpdateMessage;
+
+    @Bindable
+    private String mUsernameError;
+
+    @Bindable
+    private String mPasswordError;
+    	</pre>
+    </div>
+    <div id="snippet_onResume_settingsVm" class="step">
+    	<pre class="prettyprint lang-java">
+    public void onResume(){
+        <span data-jmpress="fade">setLoading(true);</span>
+         <span data-jmpress="fade">mRepository.loadUserSettings(new LoadedUserSettingsHandler());</span>
+     }
+    	</pre>
+    </div>
+    <div id="step15" class="step">
+    	<div class="diagram"><img src="img/diagrams/settings.png"/></div>
+    </div>
+    <div id="snippet_settingsXml_progressbar" class="step">
+    	<p>Layout XML:</p>
+		<pre class="prettyprint lang-xml">
+    &lt;ProgressBar
+         android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+         <span data-jmpress="fade"><span class="bold">android:visibility="@{viewModel.loading ? View.VISIBLE : View.GONE}"</span></span>
+         android:layout_centerInParent="true"/&gt;
+    	</pre>
+    </div>
+    <div id="snippet_settingsXml_data" class="step">
+    	<pre class="prettyprint lang-xml">
+        &lt;data&gt;
+            &lt;variable
+                name="<span class="bold">viewModel"</span>
+                type="com.samples.songster.presentation.settings.<span class="bold">SettingsViewModel"</span>    /&gt;
+            &lt;import type="android.view.View" /&gt;
+        &lt;/data&gt;
+    	</pre>
+    </div>
+    <div id="snippet_settingsVm_loadSettings" class="step">
+    	<p>SettingsViewModel:</p>
+    		<pre class="prettyprint lang-java">
+    public void onResume(){
+        setLoading(true);
+         <span class="bold">mRepository.loadUserSettings(new LoadedUserSettingsHandler());</span>
+     }
+    	</pre>
+    </div>
+    <div id="snippet_settingsVm_loadSettingsHandler" class="step">
+    	<pre class="prettyprint lang-java">
+    private class LoadedUserSettingsHandler extends SettingsRepository.SettingsRepositoryListenerAdapter {
+          @Override
+         public void onLoadedUserSettings(UserModel userModel) { 
+            setUser(userModel); 
+            <span class="bold">setLoading(false);</span>
+             //...
+        }
+     }
+    	</pre>
+    </div>
+    <div id="snippet_settingsVm_notifyProperty" class="step">
+    	<pre class="prettyprint lang-java">
+    public void setLoading(boolean loading) {
+         this.loading = loading; 
+        <span class="bold">notifyPropertyChanged(BR.loading); </span>
+    }
+    	</pre>
+    </div>
+    <div id="snippet_settingsVm_baseObservable" class="step">
+    	<pre class="prettyprint lang-java">
+    public class SettingsViewModel <span class="bold">extends BaseObservable</span> {
+    	</pre>
+    </div>
+    <div id="snippet_settingsVm_bindable" class="step">
+	    <pre class="prettyprint lang-java">
+    <span class="bold">@Bindable</span>
+    private boolean loading;
+    	</pre>
+    </div>
+    <div id="snippet_settingsActivity" class="step">
+    	<p>SettingsActivity:</p>
+    	<pre class="prettyprint lang-java">
+public class SettingsActivity extends AppCompatActivity {
+
+    <span data-jmpress="fade">private SettingsViewModel viewModel;</span>
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        <span data-jmpress="fade">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
+        viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
+        binding.setViewModel(viewModel);</span>
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        <span data-jmpress="fade">viewModel.onResume();</span>
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        <span data-jmpress="fade">viewModel.onPause();</span>
+    }
+}
+		</pre>
+    </div>
+    <div id="step24" class="step">
+    	<p>Settings Demo</p>
+    </div>
+    <!--TODO: Show screenshots of workflow with empty list and refresh button leading to list-->
+    <div id="step25" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist.png"/></div>
+    </div>
+    <div id="step26" class="step">
+		<div class="screenshot"><img src="img/diagrams/mylist.png"/></div>
+    </div>
+    <div id="snippet_myListVm_onResume" class="step">
+    	<p>MyListViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    public void onResume(){
+        if(mMyItems == null || mMyItems.size() == 0){
+            <span class="bold">setLoading(false);
+            setDisplayInfoMessage(true);</span>
+        }
+    }
+    	</pre>
+    </div>
+    <div id="step28" class="step">
+    	<div class="diagram"><img src="img/diagrams/mylist.png"/></div>
+    </div>
+    <div id="snippet_mylistXml_textImage" class="step">
+    	<p>Layout XML:</p>
+    	<pre class="prettyprint lang-xml">
+    &lt;LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        <span data-jmpress="fade"><span class="bold">android:visibility="@{viewModel.displayInfoMessage ? View.VISIBLE : View.GONE}"&gt;</span></span>
+
+        &lt;TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/label.mylist.info"/&gt;
+
+        &lt;ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh_black_24dp"
+            android:background="@null"
+            android:padding="@dimen/space.small"
+            <span data-jmpress="fade"><span class="bold">android:onClick="@{viewModel.onClickRefresh}"/&gt;</span></span>
+    &lt;/LinearLayout&gt;
+    	</pre>
+    </div>
+    <div id="snippet_myListVm_onClick" class="step">
+    	<p>MyListViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    public void onClickRefresh(<span class="bold">View view</span>){
+        setLoading(true);
+        setDisplayInfoMessage(false);
+        <span class="bold">mRepository.loadMyList(new LoadedMyListHandler());</span>
+    }
+    	</pre>
+    </div>
+    <div id="snippet_myListVm_loadedHandler" class="step">
+    	<table><tr>
+    		<td rowspan="2" width="70%">
+    				<pre class="prettyprint lang-java">
+    public class LoadedMyListHandler implements ...{  
+        @Override 
+        public void onLoadedMyList(List<SongDto> songs) {
+             <span id="snippet_lines_setLoading" data-jmpress="fade">setLoading(false);</span>
+              <span id="snippet_lines_headerItem" data-jmpress="fade after #snippet_lines_setLoading">//Build item models using the retrieved songs 
+            //Add a header item 
+            MyListItemModel headerItem = new MyListItemModel(this);
+             headerItem.setItemType(MyListItemModel.ItemType.HEADER); 
+            headerItem.setTitle("My Songs"); 
+            mMyItems.add(headerItem);  </span>
+
+			<span id="snippet_lines_resultItems" data-jmpress="fade after #snippet_lines_headerItem">
+            //Add items for each song 
+            for(SongDto song : songs){ 
+                MyListItemModel songItem = new MyListItemModel(this); 
+                songItem.setSong(song);
+                 songItem.setItemType(MyListItemModel.ItemType.RESULT); 
+                mMyItems.add(songItem); 
+            } </span>
+            <span class="bold" data-jmpress="fade after #snippet_lines_resultItems">mView.updateRecyclerView(); </span>
+        }
+          //... 
+    }
+    			</pre>
+    		</td><td width="30%">
+    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_setLoading"><img src="img/diagrams/header_item.png"/></span></div>
+    		</td>
+    	</tr><tr>
+    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_headerItem"><img src="img/diagrams/regular_item.png"/></span></div></td>
+    	</tr></table>
+    </div>
+    <div id="step32" class="step">
+    	<h2>Why is there a call to <span class="blue">mView.updateRecyclerView()?</span></h3>
+    </div>
+    <div id="step33" class="step">
+    	<div class="diagram"><img src="img/diagrams/mylist.png"/></div>
+    </div>
+    <div id="snippet_myListFragment_configRecView" class="step">
+    	<p>MyListFragment:</p>
+    	<pre class="prettyprint lang-java">
+        private void configureRecyclerView() {
+            <span data-jmpress="fade">mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(getActivity()); 
+            mRecyclerView.setLayoutManager(mLayoutManager);</span>
+            <span data-jmpress="fade"><span class="bold">mMyListAdapter = new MyListAdapter(mViewModel.getMyItems());</span>
+            mRecyclerView.setAdapter(mMyListAdapter);</span>
+        }    
+		</pre>
+    </div>
+    <div id="snippet_myListAdapter_createViewHolder" class="step">
+    	<p>MyListAdapter:</p>
+    	<table><tr>
+    		<td rowspan="2" width="70%">
+    			<pre class="prettyprint lang-java">
+    @Override
+     public BindingViewHolder<ViewDataBinding> onCreateViewHolder(ViewGroup parent, int viewType) { 
+        ViewDataBinding binding; 
+        <span id="snippet_lines_onCreateViewHolder" data-jmpress="fade">MyListItemModel.ItemType itemType = MyListItemModel.
+        ItemType.values()[viewType];
+         switch (itemType) {</span>
+             <span id="snippet_lines_caseHeader" data-jmpress="fade after #snippet_lines_onCreateViewHolder">case HEADER:
+                 binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    <span class="bold">R.layout.item_mylist_header</span>, 
+                    parent, 
+                    false); 
+                break; </span>
+            <span data-jmpress="fade after #snippet_lines_caseHeader">default: 
+                binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    <span class="bold">R.layout.item_mylist_result</span>, 
+                    parent, 
+                    false);
+                 break;</span>
+         }
+         return new BindingViewHolder<>(binding); 
+    }
+    			</pre>
+    		</td><td width="30%">
+    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_onCreateViewHolder"><img src="img/diagrams/header_item.png"/></span></div>
+    		</td>
+    	</tr><tr>
+    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
+    	</tr></table>
+    </div>
+    <div id="snippet_myListAdapter_onBindViewHolder" class="step">
+    	<table><tr>
+    		<td rowspan="2" width="70%">
+    			<pre class="prettyprint lang-java">
+            @Override
+             public void onBindViewHolder(BindingViewHolder<T> holder, int position) {
+                <span id="snippet_lines_bindViewHolder" data-jmpress="fade">T binding = holder.getBinding(); 
+                MyListItemModel item = mItems.get(position);
+                 switch (item.getItemType()) { 
+                    <span id="snippet_lines_caseBindHeader" data-jmpress="fade after #snippet_lines_bindViewHolder">case HEADER:
+                         ((<span class="bold">ItemMylistHeaderBinding</span>) binding).setItem(mItems.get(position)); 
+                        break;</span>
+                     <span data-jmpress="fade after #snippet_lines_caseBindHeader"> default: 
+                        ((<span class="bold">ItemMylistResultBinding</span>) binding).setItem(mItems.get(position));
+                         break; </span>
+                }</span>
+             }
+    			</pre>
+    		</td><td width="30%">
+    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_bindViewHolder"><img src="img/diagrams/header_item.png"/></span></div>
+    		</td>
+    	</tr><tr>
+    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseBindHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
+    	</tr></table>
+    </div>
+    <div id="snippet_itemMylistHeader_xml" class="step">
+    	<p>item_mylist_header XML:</p>
+    	<pre class="prettyprint lang-xml">
+        &lt;TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            <span class="bold">android:text="@{item.title}"</span>
+            tools:text="Item Text"
+            style="@style/Widget.TextView.Bold.Medium.Dark"/&gt;
+    	</pre>
+    </div>
+    <div id="snippet_itemMyListHeader_xml_data" class="step">
+    	<pre class="prettyprint lang-xml">
+        &lt;data&gt;
+            &lt;import type="com.samples.songster.presentation.mylist.<span class="bold">MyListItemModel"</span> /&gt;
+            &lt;variable name="item" type="MyListItemModel" /&gt;
+        &lt;/data&gt;
+    	</pre>
+    </div>
+    <div id="snippet_myListAdapter_bindingItem" class="step">
+    	<p>MyListAdapter:</p>
+        <pre class="prettyprint lang-java">
+        	@Override
+             public void onBindViewHolder(BindingViewHolder<T> holder, int position) {
+                //...
+                ((ItemMylistHeaderBinding) binding).setItem(<span class="bold">mItems.get(position)</span>); //MyListItemModel 
+                //...
+            }
+    	</pre>
+    </div>
+    <div id="step40" class="step">
+		<h2>Why is there a call to <span class="blue">mView.updateRecyclerView()?</span></h3>
+		<p data-jmpress="fade">RecyclerView not bound to data model</p>
+		<p data-jmpress="fade">RecyclerView's <span class="bold">data adapter is bound to the data model</span></p>
+		<p data-jmpress="fade"><span class="bold">notifyDataSetChanged</span> required when adding items</p>
+    </div>
+    <div id="step41" class="step">
+    	Demo My List
+    </div>
+    <div id="step42" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist.png"/></div>
+    </div>
+    <div id="step43" class="step">
+    	<div class="screenshot"><img src="img/screenshots/login_dialog.png"/></div>
+    </div>
+    <div id="step44" class="step">
+    	<div class="screenshot"><img src="img/screenshots/purchased_song.png"/></div>
+    </div>
+    <div id="snippet_itemResult_button" class="step">
+    	<p>item_mylist_result XML:</p>
+    	<pre class="prettyprint lang-xml">
+        &lt;Button
+             android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+             android:text="@string/label.buy"
+             android:visibility="@{item.beingPurchased || item.purchased ? View.GONE : View.VISIBLE}"
+             <span data-jmpress="fade"><span class="bold">android:onClick="@{item.onClickBuy}"</span></span>
+        /&gt;
+    	</pre>
+    </div>
+    <div id="step46" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist_markup.png"/></div>
+    </div>
+    <div id="step47" class="step">
+    	<div class="diagram"><img src="img/diagrams/my_list_item_models.png"/></div>
+    </div>
+    <div id="snippet_myListItemModel_onClick" class="step">
+    	<p>MyListItemModel:</p>
+        <pre class="prettyprint lang-java">
+        public void onClickBuy(View view){
+            mListener.onBuyItem(this);
+        }
+    	</pre>
+    </div>
+    <div id="snippet_myListVm_onBuyItem" class="step">
+    	<p>MyListViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    	public class LoadedMyListHandler implements <span class="bold">MyListItemModel.MyListItemModelListener</span>...{  
+            @Override 
+            public void onLoadedMyList(List<SongDto> songs) {
+                 //...
+                //Add a header item 
+                <span data-jmpress="fade"><span class="bold">MyListItemModel headerItem = new MyListItemModel(this);</span></span>
+                 //...
+            }
+            
+            <span data-jmpress="fade">
+            @Override 
+            public void onBuyItem(MyListItemModel item) {
+                 if(mItemBeingPurchased == null) { 
+                    <span data-jmpress="fade"><span class="bold">mItemBeingPurchased = item;</span></span>
+                     <span data-jmpress="fade">if (item.getItemType() == MyListItemModel.ItemType.RESULT) {
+                         item.setBeingPurchased(true); 
+                        <span class="bold">mUseCase.purchaseSong(item.getSong());</span>
+                     } </span>
+                }
+             }</span> 
+        }
+    			</pre>
+    </div>
+    <div id="snippet_myListVm_showLoginView" class="step">
+    	<pre class="prettyprint lang-java">
+    @Override
+    public void showLoginView(SongDto songDto) {
+        mView.showLoginView();
+    }
+		</pre>
+    </div>
+    <div id="step51" class="step">
+    	<div class="diagram"><img src="img/diagrams/login.png"/></div>
+    </div>
+    <div id="snippet_myListVm_purchaseSuccess" class="step">
+    	<p>MyListViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    @Override
+    public void showPurchaseSuccsessMessage(SongDto song) {
+        mItemBeingPurchased.setPurchased(true);
+        mItemBeingPurchased.setBeingPurchased(false);
+        mItemBeingPurchased = null;
+    }
+		</pre>
+    </div>
+    <div id="step53" class="step">
+    	Demo Purchase
+    </div>
+    <div id="step54" class="step">
+    	<h3>Recap</h3>
+    	<p data-jmpress="fade">TODO</p>
+    </div>
+    <div id="step55" class="step">
+    	<h3>Thank You</h3>
+    	<p data-jmpress="fade">Questions?</p>
+    </div>
+</div>
+
+<div class="hint">
+    <p>Use arrow keys to navigate</p>
+</div>
+
+<script type="text/javascript">
+//Variables
+var dx_small = 200;
+var dy_small = 100;
+
+var dy_medium = 300;
+
+var dx_large = 300;
+var dy_large = 300;
+var dz_large = 300;
+
+var dx_xlarge = 1200;
+
+//Define movement through the slides
+moveVerticallyTo($("#infoNoser"), dy_large);
+moveVerticallyTo($("#step3"), dy_large);
+zoomInto($("#no_mvvm_snippet"));
+zoomAndMoveVertically($("#step5"), dy_large, dz_large);
+zoomInto($("#mvp_snippet_fragment"));
+moveVerticallyTo($("#mvp_snippet_viewmodel"), dy_medium);
+zoomAndMoveVertically($("#step8"), dy_large, dz_large);
+moveVerticallyTo($("#step9"), dy_large);
+moveHorizontallyTo($("#step10"), dx_large);
+moveVerticallyTo($("#step11"), dy_large);
+zoomInto($("#step12"));
+zoomAndMoveTo($("#snippet_properties_settingsVm"), 250, 75, -dz_large);
+moveVerticallyTo($("#snippet_onResume_settingsVm"), dy_large);
+zoomAndMoveVertically($("#step15"), dy_large, dz_large);
+zoomAndMoveTo($("#snippet_settingsXml_progressbar"), 0, -150, -dz_large);
+moveVerticallyTo($("#snippet_settingsXml_data"), dy_medium);
+moveHorizontallyTo($("#snippet_settingsVm_loadSettings"), dx_xlarge);
+moveVerticallyTo($("#snippet_settingsVm_loadSettingsHandler"), dy_medium);
+moveVerticallyTo($("#snippet_settingsVm_notifyProperty"), dy_medium);
+moveVerticallyTo($("#snippet_settingsVm_baseObservable"), dy_medium);
+moveVerticallyTo($("#snippet_settingsVm_bindable"), dy_medium);
+moveHorizontallyTo($("#snippet_settingsActivity"), dx_xlarge);
+zoomAndMoveVertically($("#step24"), dy_large, dz_large);
+zoomAndMoveVertically($("#step25"), dy_large, dz_large);
+zoomInto($("#step26"));
+zoomAndMoveTo($("#snippet_myListVm_onResume"), 175, 0, -dz_large);
+zoomAndMoveVertically($("#step28"), dy_large, dz_large);
+zoomAndMoveTo($("#snippet_mylistXml_textImage"), 0, -200, -dz_large);
+moveHorizontallyTo($("#snippet_myListVm_onClick"), dx_xlarge);
+moveVerticallyTo($("#snippet_myListVm_loadedHandler"), dy_medium);
+
+//After we rotate, the x and y axis are switched so to move down we have to call moveHorizontally and vice versa.
+rotateAndMoveTo($("#step32"), dx_xlarge, 0, 0,-90);
+moveHorizontallyTo($("#step33"), dy_large);
+zoomAndMoveTo($("#snippet_myListFragment_configRecView"), -20, 150, -dz_large);
+moveVerticallyTo($("#snippet_myListAdapter_createViewHolder"), -dx_xlarge);
+moveHorizontallyTo($("#snippet_myListAdapter_onBindViewHolder"), dy_large);
+zoomAndMoveTo($("#snippet_itemMylistHeader_xml"), -220, -350, -dz_large);
+moveHorizontallyTo($("#snippet_itemMyListHeader_xml_data"), dy_medium);
+zoomAndMoveTo($("#snippet_myListAdapter_bindingItem"), 0, 0, dz_large);
+moveHorizontallyTo($("#step40"), dy_large);
+
+//Rotate back to the normal axes
+rotateAndMoveTo($("#step41"), 500, 1500, dz_large, 0);
+zoomAndMoveVertically($("#step42"), dy_large, dz_large);
+moveVerticallyTo($("#step43"), dy_large);
+moveVerticallyTo($("#step44"), dy_large);
+zoomAndMoveTo($("#snippet_itemResult_button"), 0, 0, -dz_large);
+zoomAndMoveTo($("#step46"), 0, dy_large, dz_large);
+moveHorizontallyTo($("#step47"), dx_large);
+zoomAndMoveTo($("#snippet_myListItemModel_onClick"), 0, 0, -dz_large);
+moveHorizontallyTo($("#snippet_myListVm_onBuyItem"), dx_xlarge);
+moveVerticallyTo($("#snippet_myListVm_showLoginView"), dy_large);
+zoomAndMoveTo($("#step51"), 0, 0, dz_large);
+moveVerticallyTo($("#snippet_myListVm_purchaseSuccess"), dy_large);
+zoomAndMoveVertically($("#step53"), dy_large, dz_large);
+zoomAndMoveVertically($("#step54"), dy_large, dz_large);
+moveVerticallyTo($("#step55"), dy_large);
+
+$(function() {
+	$('#jmpress').jmpress();
+});
+
+$(document).keyup(function(e) {
+     if (e.keyCode == 27) { // escape key maps to keycode `27`
+	    //Enable print mode if user presses the 'ESC' key.
+	    //Before this can work, though, you need to comment out the following line in common.css: opacity: 0;
+       // $('#jmpress').jmpress('deinit');
+    }
+});
+</script>
+
+</body>
+</html>
