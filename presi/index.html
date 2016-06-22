@@ -93,6 +93,12 @@
     <div id="step11" class="step">
     	<div class="screenshot"><img src="img/screenshots/register.png"/></div>
     </div>
+    <div id="register_loading" class="step">
+		<div class="diagram"><img src="img/screenshots/register_loading.png"/></div>
+    </div>
+    <div id="register_message" class="step">
+		<div class="diagram"><img src="img/screenshots/register_message.png"/></div>
+    </div>
     <div id="step12" class="step">
     	<div class="diagram"><img src="img/diagrams/settings.png"/></div>
     </div>
@@ -102,8 +108,8 @@
     @Bindable
     private boolean mUserRegistered;
 
-    @Bindable
-    private boolean loading;
+    <span class="bold">@Bindable
+    private boolean loading;</span>
 
     @Bindable
     private boolean editing;
@@ -231,11 +237,61 @@ public class SettingsActivity extends AppCompatActivity {
 }
 		</pre>
     </div>
+    <div id="databinding_under_the_hood" class="step">
+    	<div class="screenshot"><img src="img/diagrams/databinding_under_the_hood.png"/></div>
+    </div>
+    <div id="viewDataBinding_class" class="step">
+    	<h2>Generated data binding classes</h3>
+    	<p data-jmpress="fade">Wire up view model properties with actual views</p>
+		<p data-jmpress="fade">Extend ViewDataBinding class</p>
+    </div>
+    <div id="snippet_settingsActivity_under_the_hood" class="step">
+    	<p>SettingsActivity:</p>
+    	<pre class="prettyprint lang-java">
+public class SettingsActivity extends AppCompatActivity {
+
+    private SettingsViewModel viewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        <span class="bold">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);</span>
+        viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
+        <span class="bold">databinding.setViewModel(viewModel);</span>
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.onPause();
+    }
+}
+		</pre>
+    </div>
     <div id="step24" class="step">
     	<p>Settings Demo</p>
     </div>
     <!--TODO: Show screenshots of workflow with empty list and refresh button leading to list-->
     <div id="step25" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist.png"/></div>
+    </div>
+    <div id="mylist_empty" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist_empty.png"/></div>
+    </div>
+    <div id="mylist_loading" class="step">
+    	<div class="screenshot"><img src="img/screenshots/mylist_loading.png"/></div>
+    </div>
+    <div id="mylist_loaded" class="step">
     	<div class="screenshot"><img src="img/screenshots/mylist.png"/></div>
     </div>
     <div id="step26" class="step">
@@ -345,6 +401,41 @@ public class SettingsActivity extends AppCompatActivity {
         }    
 		</pre>
     </div>
+    <div id="snippet_myListAdapter_createViewHolder_simple" class="step">
+    	<p>MyListAdapter:</p>
+    	<table><tr>
+    		<td rowspan="2" width="70%">
+    			<pre class="prettyprint lang-java">
+    @Override
+     public BindingViewHolder<ViewDataBinding> onCreateViewHolder(ViewGroup parent, int viewType) { 
+        ViewDataBinding binding; 
+        <span id="snippet_lines_onCreateViewHolder" data-jmpress="fade">MyListItemModel.ItemType itemType = MyListItemModel.
+        ItemType.values()[viewType];
+         switch (itemType) {</span>
+             <span id="snippet_lines_caseHeader" data-jmpress="fade after #snippet_lines_onCreateViewHolder">case HEADER:
+                //...
+                <span class="bold">R.layout.item_mylist_header</span>
+                //..
+                break; </span>
+            <span data-jmpress="fade after #snippet_lines_caseHeader">default: 
+                //...
+                <span class="bold">R.layout.item_mylist_result</span>
+                //...
+                 break;</span>
+         }
+         return ...; 
+    }
+    			</pre>
+    		</td><td width="30%">
+    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_onCreateViewHolder"><img src="img/diagrams/header_item.png"/></span></div>
+    		</td>
+    	</tr><tr>
+    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
+    	</tr></table>
+    </div>
+    <div id="recycler_rows_under_the_hood" class="step">
+    	<div class="diagram"><img src="img/diagrams/recycler_view_databinding_under_the_hood.png"/></div>
+    </div>
     <div id="snippet_myListAdapter_createViewHolder" class="step">
     	<p>MyListAdapter:</p>
     	<table><tr>
@@ -381,6 +472,23 @@ public class SettingsActivity extends AppCompatActivity {
     		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
     	</tr></table>
     </div>
+    <div id="snippet_bindingViewHolder" class="step">
+    	<p>BindingViewHolder:</p>
+    			<pre class="prettyprint lang-java">
+    public class BindingViewHolder &lt;T extends ViewDataBinding&gt; extends RecyclerView.ViewHolder {
+        final T mLayoutBinding;
+
+        public BindingViewHolder(T layoutBinding) {
+            super(layoutBinding.getRoot());
+            mLayoutBinding = layoutBinding;
+        }
+
+        public T getBinding() {
+            return mLayoutBinding;
+        }
+    }
+    			</pre>
+    </div>
     <div id="snippet_myListAdapter_onBindViewHolder" class="step">
     	<table><tr>
     		<td rowspan="2" width="70%">
@@ -400,10 +508,10 @@ public class SettingsActivity extends AppCompatActivity {
              }
     			</pre>
     		</td><td width="30%">
-    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_bindViewHolder"><img src="img/diagrams/header_item.png"/></span></div>
+    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_bindViewHolder"><img src="img/diagrams/header_item_with_binding.png"/></span></div>
     		</td>
     	</tr><tr>
-    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseBindHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
+    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseBindHeader"><img src="img/diagrams/result_item_with_binding.png"/></span></div></td>
     	</tr></table>
     </div>
     <div id="snippet_itemMylistHeader_xml" class="step">
@@ -569,6 +677,8 @@ zoomAndMoveVertically($("#step8"), dy_large, dz_large);
 moveVerticallyTo($("#step9"), dy_large);
 moveHorizontallyTo($("#step10"), dx_large);
 moveVerticallyTo($("#step11"), dy_large);
+moveVerticallyTo($("#register_loading"), 0);
+moveVerticallyTo($("#register_message"), 0);
 zoomInto($("#step12"));
 zoomAndMoveTo($("#snippet_properties_settingsVm"), 250, 75, -dz_large);
 moveVerticallyTo($("#snippet_onResume_settingsVm"), dy_large);
@@ -581,8 +691,14 @@ moveVerticallyTo($("#snippet_settingsVm_notifyProperty"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_baseObservable"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_bindable"), dy_medium);
 moveHorizontallyTo($("#snippet_settingsActivity"), dx_xlarge);
+moveVerticallyTo($("#databinding_under_the_hood"), dy_medium);
+moveVerticallyTo($("#viewDataBinding_class"), dy_medium);
+moveVerticallyTo($("#snippet_settingsActivity_under_the_hood"), dy_medium);
 zoomAndMoveVertically($("#step24"), dy_large, dz_large);
 zoomAndMoveVertically($("#step25"), dy_large, dz_large);
+moveVerticallyTo($("#mylist_empty"), 0);
+moveVerticallyTo($("#mylist_loading"), 0);
+moveVerticallyTo($("#mylist_loaded"), 0);
 zoomInto($("#step26"));
 zoomAndMoveTo($("#snippet_myListVm_onResume"), 175, 0, -dz_large);
 zoomAndMoveVertically($("#step28"), dy_large, dz_large);
@@ -594,7 +710,10 @@ moveVerticallyTo($("#snippet_myListVm_loadedHandler"), dy_medium);
 rotateAndMoveTo($("#step32"), dx_xlarge, 0, 0,-90);
 moveHorizontallyTo($("#step33"), dy_large);
 zoomAndMoveTo($("#snippet_myListFragment_configRecView"), -20, 150, -dz_large);
-moveVerticallyTo($("#snippet_myListAdapter_createViewHolder"), -dx_xlarge);
+moveVerticallyTo($("#snippet_myListAdapter_createViewHolder_simple"), -dx_large);
+moveHorizontallyTo($("#recycler_rows_under_the_hood"), dy_large);
+moveHorizontallyTo($("#snippet_myListAdapter_createViewHolder"), dy_large);
+moveHorizontallyTo($("#snippet_bindingViewHolder"), dy_large);
 moveHorizontallyTo($("#snippet_myListAdapter_onBindViewHolder"), dy_large);
 zoomAndMoveTo($("#snippet_itemMylistHeader_xml"), -220, -350, -dz_large);
 moveHorizontallyTo($("#snippet_itemMyListHeader_xml_data"), dy_medium);
@@ -604,8 +723,8 @@ moveHorizontallyTo($("#step40"), dy_large);
 //Rotate back to the normal axes
 rotateAndMoveTo($("#step41"), 500, 1500, dz_large, 0);
 zoomAndMoveVertically($("#step42"), dy_large, dz_large);
-moveVerticallyTo($("#step43"), dy_large);
-moveVerticallyTo($("#step44"), dy_large);
+moveVerticallyTo($("#step43"), 0);
+moveVerticallyTo($("#step44"), 0);
 zoomAndMoveTo($("#snippet_itemResult_button"), 0, 0, -dz_large);
 zoomAndMoveTo($("#step46"), 0, dy_large, dz_large);
 moveHorizontallyTo($("#step47"), dx_large);
