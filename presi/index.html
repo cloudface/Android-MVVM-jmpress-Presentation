@@ -29,7 +29,10 @@
 	<div id="title" class="step" data-x="0" data-y="0" data-z="0"><h1>Databinding and MVVM in Android</h1></div>
 	<div id="infoNoser" class="step">
 		<h2>About me</h2>
-		<p>TODO: Info about Noser</p>
+		<p data-jmpress="fade">Chris Braunschweiler</p>
+		<p data-jmpress="fade">Software Engineer</p>
+		<p data-jmpress="fade">Mobile Software Development</p>
+		<p data-jmpress="fade">Noser Engineering</p>
 	</div>
 	<div id="step3" class="step">
 		<div class="diagram"><img src="img/diagrams/activity_fragment.png"/></div>
@@ -105,39 +108,17 @@
     <div id="snippet_properties_settingsVm" class="step">
 		<p>SettingsViewModel:</p>
     	<pre class="prettyprint lang-java">
-    @Bindable
-    private boolean mUserRegistered;
 
-    <span class="bold">@Bindable
     private boolean loading;</span>
 
-    @Bindable
-    private boolean editing;
-
-    @Bindable
-    private UserModel user;
-
-    @Bindable
-    private boolean settingsUpdated;
-
-    @Bindable
-    private boolean settingsUpdateSuccessful;
-
-    @Bindable
-    private String settingsUpdateMessage;
-
-    @Bindable
-    private String mUsernameError;
-
-    @Bindable
-    private String mPasswordError;
+    //More properties...
     	</pre>
     </div>
     <div id="snippet_onResume_settingsVm" class="step">
     	<pre class="prettyprint lang-java">
     public void onResume(){
         <span data-jmpress="fade">setLoading(true);</span>
-         <span data-jmpress="fade">mRepository.loadUserSettings(new LoadedUserSettingsHandler());</span>
+
      }
     	</pre>
     </div>
@@ -178,7 +159,7 @@
     private class LoadedUserSettingsHandler extends SettingsRepository.SettingsRepositoryListenerAdapter {
           @Override
          public void onLoadedUserSettings(UserModel userModel) { 
-            setUser(userModel); 
+            //..
             <span class="bold">setLoading(false);</span>
              //...
         }
@@ -214,10 +195,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         <span data-jmpress="fade">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
         binding.setViewModel(viewModel);</span>
@@ -255,10 +232,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         <span class="bold">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);</span>
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
         <span class="bold">databinding.setViewModel(viewModel);</span>
@@ -297,8 +270,19 @@ public class SettingsActivity extends AppCompatActivity {
     <div id="step26" class="step">
 		<div class="screenshot"><img src="img/diagrams/mylist.png"/></div>
     </div>
-    <div id="snippet_myListVm_onResume" class="step">
+    <div id="snippet_myListVm_properties" class="step">
     	<p>MyListViewModel:</p>
+    	<pre class="prettyprint lang-java">
+    @Bindable
+    private boolean mDisplayInfoMessage;
+
+    @Bindable
+    private boolean mLoading;
+    
+    //...
+    	</pre>
+    </div>
+    <div id="snippet_myListVm_onResume" class="step">
     	<pre class="prettyprint lang-java">
     public void onResume(){
         if(mMyItems == null || mMyItems.size() == 0){
@@ -595,8 +579,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override 
             public void onLoadedMyList(List<SongDto> songs) {
                  //...
-                //Add a header item 
-                <span data-jmpress="fade"><span class="bold">MyListItemModel headerItem = new MyListItemModel(this);</span></span>
+                <span data-jmpress="fade"><span class="bold">MyListItemModel songItem = new MyListItemModel(this);</span></span>
                  //...
             }
             
@@ -641,7 +624,11 @@ public class SettingsActivity extends AppCompatActivity {
     </div>
     <div id="step54" class="step">
     	<h3>Recap</h3>
-    	<p data-jmpress="fade">TODO</p>
+    	<p data-jmpress="fade">View Model models state of view</p>
+		<p data-jmpress="fade">Databinding library creates binding between view and view model through generated ViewDataBinding classes</p>
+		<p data-jmpress="fade">Removes a lot of boilerplate</p>
+		<p data-jmpress="fade">Some interactions still require interaction through View interface</p>
+		<p data-jmpress="fade">Each view has own view model</p>
     </div>
     <div id="step55" class="step">
     	<h3>Thank You</h3>
@@ -685,12 +672,12 @@ moveVerticallyTo($("#snippet_onResume_settingsVm"), dy_large);
 zoomAndMoveVertically($("#step15"), dy_large, dz_large);
 zoomAndMoveTo($("#snippet_settingsXml_progressbar"), 0, -150, -dz_large);
 moveVerticallyTo($("#snippet_settingsXml_data"), dy_medium);
-moveHorizontallyTo($("#snippet_settingsVm_loadSettings"), dx_xlarge);
+moveHorizontallyTo($("#snippet_settingsVm_loadSettings"), dx_large);
 moveVerticallyTo($("#snippet_settingsVm_loadSettingsHandler"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_notifyProperty"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_baseObservable"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_bindable"), dy_medium);
-moveHorizontallyTo($("#snippet_settingsActivity"), dx_xlarge);
+moveHorizontallyTo($("#snippet_settingsActivity"), dx_large);
 moveVerticallyTo($("#databinding_under_the_hood"), dy_medium);
 moveVerticallyTo($("#viewDataBinding_class"), dy_medium);
 moveVerticallyTo($("#snippet_settingsActivity_under_the_hood"), dy_medium);
@@ -700,14 +687,15 @@ moveVerticallyTo($("#mylist_empty"), 0);
 moveVerticallyTo($("#mylist_loading"), 0);
 moveVerticallyTo($("#mylist_loaded"), 0);
 zoomInto($("#step26"));
-zoomAndMoveTo($("#snippet_myListVm_onResume"), 175, 0, -dz_large);
+zoomAndMoveTo($("#snippet_myListVm_properties"), 175, 0, -dz_large);
+moveVerticallyTo($("#snippet_myListVm_onResume"), 175, 0, dy_medium);
 zoomAndMoveVertically($("#step28"), dy_large, dz_large);
 zoomAndMoveTo($("#snippet_mylistXml_textImage"), 0, -200, -dz_large);
-moveHorizontallyTo($("#snippet_myListVm_onClick"), dx_xlarge);
+moveHorizontallyTo($("#snippet_myListVm_onClick"), dx_large);
 moveVerticallyTo($("#snippet_myListVm_loadedHandler"), dy_medium);
 
 //After we rotate, the x and y axis are switched so to move down we have to call moveHorizontally and vice versa.
-rotateAndMoveTo($("#step32"), dx_xlarge, 0, 0,-90);
+rotateAndMoveTo($("#step32"), dx_large, 0, 0,-90);
 moveHorizontallyTo($("#step33"), dy_large);
 zoomAndMoveTo($("#snippet_myListFragment_configRecView"), -20, 150, -dz_large);
 moveVerticallyTo($("#snippet_myListAdapter_createViewHolder_simple"), -dx_large);
@@ -729,7 +717,7 @@ zoomAndMoveTo($("#snippet_itemResult_button"), 0, 0, -dz_large);
 zoomAndMoveTo($("#step46"), 0, dy_large, dz_large);
 moveHorizontallyTo($("#step47"), dx_large);
 zoomAndMoveTo($("#snippet_myListItemModel_onClick"), 0, 0, -dz_large);
-moveHorizontallyTo($("#snippet_myListVm_onBuyItem"), dx_xlarge);
+moveHorizontallyTo($("#snippet_myListVm_onBuyItem"), dx_large);
 moveVerticallyTo($("#snippet_myListVm_showLoginView"), dy_large);
 zoomAndMoveTo($("#step51"), 0, 0, dz_large);
 moveVerticallyTo($("#snippet_myListVm_purchaseSuccess"), dy_large);
