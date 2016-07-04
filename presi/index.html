@@ -34,6 +34,16 @@
 		<p data-jmpress="fade">Mobile Software Development</p>
 		<p data-jmpress="fade">Noser Engineering</p>
 	</div>
+	<div id="contents" class="step">
+		<h2>Contents</h2>
+		<p data-jmpress="fade">Spaghetti approach</p>
+		<p data-jmpress="fade">Model View Presenter</p>
+		<p data-jmpress="fade">Model state using ViewModels</p>
+		<p data-jmpress="fade">Databinding expressions</p>
+		<p data-jmpress="fade">Under the hood</p>
+		<p data-jmpress="fade">Databinding with RecyclerViews</p>
+		<p data-jmpress="fade">MVVM as alternative to MVP</p>
+	</div>
 	<div id="step3" class="step">
 		<div class="diagram"><img src="img/diagrams/activity_fragment.png"/></div>
 	</div>
@@ -55,25 +65,18 @@
 		</pre>
     </div>
     <div id="step5" class="step">
-    	<div class="diagram"><img src="img/diagrams/mvvm.png"/></div>
+    	<div class="diagram"><img src="img/diagrams/mvp.png"/></div>
     </div>
     <div id="mvp_snippet_fragment" class="step">
     	<p>Activity/Fragment:</p>
     	<pre class="prettyprint lang-java">
-    mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-         @Override
-         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-             <span data-jmpress="fade">if (actionId == EditorInfo.IME_ACTION_SEARCH) { 
-                <span data-jmpress="fade">mViewModel.onSearch(mSearchEditText.getText().toString()); 
-                return true; </span>
-            }
-             return false; </span>
-        } 
-    });
+    public void onSearch(String searchString) {
+        <span data-jmpress="fade">mPresenter.onSearch(mSearchEditText.getText().toString()); </span>        
+    }
     	</pre>
     </div>
     <div id="mvp_snippet_viewmodel" class="step">
-    	<p>ViewModel:</p>
+    	<p>Presenter:</p>
     	<pre class="prettyprint lang-java">
     public void onSearch(String searchString) {
         <span data-jmpress="fade">if(searchString != null && !searchString.isEmpty()){
@@ -234,7 +237,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         <span class="bold">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);</span>
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
-        <span class="bold">databinding.setViewModel(viewModel);</span>
+        <span class="bold">binding.setViewModel(viewModel);</span>
     }
 
     @Override
@@ -483,10 +486,10 @@ public class SettingsActivity extends AppCompatActivity {
                 MyListItemModel item = mItems.get(position);
                  switch (item.getItemType()) { 
                     <span id="snippet_lines_caseBindHeader" data-jmpress="fade after #snippet_lines_bindViewHolder">case HEADER:
-                         ((<span class="bold">ItemMylistHeaderBinding</span>) binding).setItem(mItems.get(position)); 
+                         ((<span class="bold">ItemMylistHeaderBinding</span>) binding).setItem(item); 
                         break;</span>
                      <span data-jmpress="fade after #snippet_lines_caseBindHeader"> default: 
-                        ((<span class="bold">ItemMylistResultBinding</span>) binding).setItem(mItems.get(position));
+                        ((<span class="bold">ItemMylistResultBinding</span>) binding).setItem(item);
                          break; </span>
                 }</span>
              }
@@ -523,7 +526,7 @@ public class SettingsActivity extends AppCompatActivity {
         	@Override
              public void onBindViewHolder(BindingViewHolder<T> holder, int position) {
                 //...
-                ((ItemMylistHeaderBinding) binding).setItem(<span class="bold">mItems.get(position)</span>); //MyListItemModel 
+                ((ItemMylistHeaderBinding) binding).setItem(<span class="bold">item</span>); //MyListItemModel 
                 //...
             }
     	</pre>
@@ -537,98 +540,12 @@ public class SettingsActivity extends AppCompatActivity {
     <div id="step41" class="step">
     	Demo My List
     </div>
-    <div id="step42" class="step">
-    	<div class="screenshot"><img src="img/screenshots/mylist.png"/></div>
-    </div>
-    <div id="step43" class="step">
-    	<div class="screenshot"><img src="img/screenshots/login_dialog.png"/></div>
-    </div>
-    <div id="step44" class="step">
-    	<div class="screenshot"><img src="img/screenshots/purchased_song.png"/></div>
-    </div>
-    <div id="snippet_itemResult_button" class="step">
-    	<p>item_mylist_result XML:</p>
-    	<pre class="prettyprint lang-xml">
-        &lt;Button
-             android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-             android:text="@string/label.buy"
-             android:visibility="@{item.beingPurchased || item.purchased ? View.GONE : View.VISIBLE}"
-             <span data-jmpress="fade"><span class="bold">android:onClick="@{item.onClickBuy}"</span></span>
-        /&gt;
-    	</pre>
-    </div>
-    <div id="step46" class="step">
-    	<div class="screenshot"><img src="img/screenshots/mylist_markup.png"/></div>
-    </div>
-    <div id="step47" class="step">
-    	<div class="diagram"><img src="img/diagrams/my_list_item_models.png"/></div>
-    </div>
-    <div id="snippet_myListItemModel_onClick" class="step">
-    	<p>MyListItemModel:</p>
-        <pre class="prettyprint lang-java">
-        public void onClickBuy(View view){
-            mListener.onBuyItem(this);
-        }
-    	</pre>
-    </div>
-    <div id="snippet_myListVm_onBuyItem" class="step">
-    	<p>MyListViewModel:</p>
-    	<pre class="prettyprint lang-java">
-    	public class LoadedMyListHandler implements <span class="bold">MyListItemModel.MyListItemModelListener</span>...{  
-            @Override 
-            public void onLoadedMyList(List<SongDto> songs) {
-                 //...
-                <span data-jmpress="fade"><span class="bold">MyListItemModel songItem = new MyListItemModel(this);</span></span>
-                 //...
-            }
-            
-            <span data-jmpress="fade">
-            @Override 
-            public void onBuyItem(MyListItemModel item) {
-                 if(mItemBeingPurchased == null) { 
-                    <span data-jmpress="fade"><span class="bold">mItemBeingPurchased = item;</span></span>
-                     <span data-jmpress="fade">if (item.getItemType() == MyListItemModel.ItemType.RESULT) {
-                         item.setBeingPurchased(true); 
-                        <span class="bold">mUseCase.purchaseSong(item.getSong());</span>
-                     } </span>
-                }
-             }</span> 
-        }
-    			</pre>
-    </div>
-    <div id="snippet_myListVm_showLoginView" class="step">
-    	<pre class="prettyprint lang-java">
-    @Override
-    public void showLoginView(SongDto songDto) {
-        mView.showLoginView();
-    }
-		</pre>
-    </div>
-    <div id="step51" class="step">
-    	<div class="diagram"><img src="img/diagrams/login.png"/></div>
-    </div>
-    <div id="snippet_myListVm_purchaseSuccess" class="step">
-    	<p>MyListViewModel:</p>
-    	<pre class="prettyprint lang-java">
-    @Override
-    public void showPurchaseSuccsessMessage(SongDto song) {
-        mItemBeingPurchased.setPurchased(true);
-        mItemBeingPurchased.setBeingPurchased(false);
-        mItemBeingPurchased = null;
-    }
-		</pre>
-    </div>
-    <div id="step53" class="step">
-    	Demo Purchase
-    </div>
     <div id="step54" class="step">
     	<h3>Recap</h3>
     	<p data-jmpress="fade">View Model models state of view</p>
 		<p data-jmpress="fade">Databinding library creates binding between view and view model through generated ViewDataBinding classes</p>
 		<p data-jmpress="fade">Removes a lot of boilerplate</p>
-		<p data-jmpress="fade">Some interactions still require interaction through View interface</p>
-		<p data-jmpress="fade">Each view has own view model</p>
+		<p data-jmpress="fade">Some interactions still require View interface (MVP)</p>
     </div>
     <div id="step55" class="step">
     	<h3>Thank You</h3>
@@ -655,6 +572,7 @@ var dx_xlarge = 1200;
 
 //Define movement through the slides
 moveVerticallyTo($("#infoNoser"), dy_large);
+moveVerticallyTo($("#contents"), dy_large);
 moveVerticallyTo($("#step3"), dy_large);
 zoomInto($("#no_mvvm_snippet"));
 zoomAndMoveVertically($("#step5"), dy_large, dz_large);
