@@ -27,7 +27,7 @@
 
 <div id="jmpress">
 	<div id="title" class="step" data-x="0" data-y="0" data-z="0">
-		<h1>Databinding and MVVM in Android</h1>
+		<h1>Databinding and Model-View-ViewModel in Android</h1>
 		<img src="img/android.png"/>
 	</div>
 	<div id="infoNoser" class="step">
@@ -39,8 +39,9 @@
 	</div>
 	<div id="contents" class="step">
 		<h2>Contents</h2>
-		<p data-jmpress="fade">Spaghetti approach</p>
+		<p data-jmpress="fade">Traditional approach</p>
 		<p data-jmpress="fade">What is the databinding library?</p>
+		<p data-jmpress="fade">What is MVVM?</p>
 		<p data-jmpress="fade">UI state in ViewModels <span data-jmpress="fade">; Boilerplate in Activity/Fragment</span></p>
 		<p data-jmpress="fade">Databinding expressions</p>
 		<p data-jmpress="fade">Under the hood</p>
@@ -70,7 +71,13 @@
     <div id="what_is_databinding" class="step">
     	<h2>What is the data binding library?</h2>
     	<p data-jmpress="fade">Bind view properties to model (POJO) properties</p>
-    	<p data-jmpress="fade">From XML!</p>
+    	<div data-jmpress="fade">
+    		<pre class="prettyprint lang-xml">
+    &lt;TextView android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           <span class="bold">android:text="@{user.firstName}"</span>/&gt;
+    		</pre>
+    	</div>
     	<p data-jmpress="fade">Generated classes that synchronize views with model</p>
     	<p data-jmpress="fade">Support library (API level 7+)</p>
     	<p data-jmpress="fade">Android Plugin for Gradle 1.5.0-alpha1 or higher</p>
