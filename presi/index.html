@@ -37,12 +37,12 @@
 	<div id="contents" class="step">
 		<h2>Contents</h2>
 		<p data-jmpress="fade">Spaghetti approach</p>
-		<p data-jmpress="fade">Model View Presenter</p>
-		<p data-jmpress="fade">Model state using ViewModels</p>
+		<p data-jmpress="fade">What is the databinding library?</p>
+		<p data-jmpress="fade">UI state in ViewModels <span data-jmpress="fade">; Boilerplate in Activity/Fragment</span></p>
 		<p data-jmpress="fade">Databinding expressions</p>
 		<p data-jmpress="fade">Under the hood</p>
 		<p data-jmpress="fade">Databinding with RecyclerViews</p>
-		<p data-jmpress="fade">MVVM as alternative to MVP</p>
+		<p data-jmpress="fade">MVVM as powerful pattern (alternative to MVP)</p>
 	</div>
 	<div id="step3" class="step">
 		<div class="diagram"><img src="img/diagrams/activity_fragment.png"/></div>
@@ -64,28 +64,23 @@
     }
 		</pre>
     </div>
-    <div id="step5" class="step">
-    	<div class="diagram"><img src="img/diagrams/mvp.png"/></div>
-    </div>
-    <div id="mvp_snippet_fragment" class="step">
-    	<p>Activity/Fragment:</p>
-    	<pre class="prettyprint lang-java">
-    public void onSearch(String searchString) {
-        <span data-jmpress="fade">mPresenter.onSearch(mSearchEditText.getText().toString()); </span>        
+    <div id="what_is_databinding" class="step">
+    	<h2>What is the data binding library?</h2>
+    	<p data-jmpress="fade">Bind view properties to model properties</p>
+    	<p data-jmpress="fade">From XML!</p>
+    	<p data-jmpress="fade">Generated classes that synchronize views with model</p>
+    	<p data-jmpress="fade">Support library (API level 7+)</p>
+    	<p data-jmpress="fade">Android Plugin for Gradle 1.5.0-alpha1 or higher</p>
+    	<div data-jmpress="fade">
+    		<pre class="prettyprint lang-java">
+    android {
+        ....
+        dataBinding {
+            enabled = true
+        }
     }
-    	</pre>
-    </div>
-    <div id="mvp_snippet_viewmodel" class="step">
-    	<p>Presenter:</p>
-    	<pre class="prettyprint lang-java">
-    public void onSearch(String searchString) {
-        <span data-jmpress="fade">if(searchString != null && !searchString.isEmpty()){
-            <span data-jmpress="fade">mSearchView.showProgressBar();</span>
-            <span data-jmpress="fade">mSearchView.hideKeyboard();</span>
-            <span data-jmpress="fade">mSearchRepository.search(searchString, this);</span>
-        }</span>
-    }
-    	</pre>
+			</pre>
+    	</div>
     </div>
     <div id="step8" class="step">
     	<div class="diagram"><img src="img/diagrams/mvvm_complete.png"/></div>
@@ -221,9 +216,31 @@ public class SettingsActivity extends AppCompatActivity {
     	<div class="screenshot"><img src="img/diagrams/databinding_under_the_hood.png"/></div>
     </div>
     <div id="viewDataBinding_class" class="step">
-    	<h2>Generated data binding classes</h3>
-    	<p data-jmpress="fade">Wire up view model properties with actual views</p>
-		<p data-jmpress="fade">Extend ViewDataBinding class</p>
+	    <h2 id="generatedBindingTitle" data-jmpress="fade">Generated data binding classes</h3>
+    	<table>
+    	<tr>
+    		<td>
+    			<p id="layout_generated_text" data-jmpress="fade after #generatedBindingTitle">Generated based on layout xml</p>
+    			<p data-jmpress="fade after #layout_generated_text">Wire up view model properties with actual views</p>
+				<p data-jmpress="fade">Extend ViewDataBinding class</p>
+			</td>
+			<td>
+				<pre class="prettyprint lang-xml"><span data-jmpress="fade after #generatedBindingTitle">
+    &lt;data&gt;
+        &lt;variable name="viewModel" type="SettingsViewModel"/&gt;
+    &lt;/data&gt;</span>
+				</pre>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<pre class="prettyprint lang-java"><span data-jmpress="fade after #generatedBindingTitle">
+    binding.setViewModel(viewModel);</span>
+				</pre>
+			</td>
+		</tr>
+		</table>
     </div>
     <div id="snippet_settingsActivity_under_the_hood" class="step">
     	<p>SettingsActivity:</p>
@@ -501,36 +518,6 @@ public class SettingsActivity extends AppCompatActivity {
     		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseBindHeader"><img src="img/diagrams/result_item_with_binding.png"/></span></div></td>
     	</tr></table>
     </div>
-    <div id="snippet_itemMylistHeader_xml" class="step">
-    	<p>item_mylist_header XML:</p>
-    	<pre class="prettyprint lang-xml">
-        &lt;TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            <span class="bold">android:text="@{item.title}"</span>
-            tools:text="Item Text"
-            style="@style/Widget.TextView.Bold.Medium.Dark"/&gt;
-    	</pre>
-    </div>
-    <div id="snippet_itemMyListHeader_xml_data" class="step">
-    	<pre class="prettyprint lang-xml">
-        &lt;data&gt;
-            &lt;import type="com.samples.songster.presentation.mylist.<span class="bold">MyListItemModel"</span> /&gt;
-            &lt;variable name="item" type="MyListItemModel" /&gt;
-        &lt;/data&gt;
-    	</pre>
-    </div>
-    <div id="snippet_myListAdapter_bindingItem" class="step">
-    	<p>MyListAdapter:</p>
-        <pre class="prettyprint lang-java">
-        	@Override
-             public void onBindViewHolder(BindingViewHolder<T> holder, int position) {
-                //...
-                ((ItemMylistHeaderBinding) binding).setItem(<span class="bold">item</span>); //MyListItemModel 
-                //...
-            }
-    	</pre>
-    </div>
     <div id="step40" class="step">
 		<h2>Why is there a call to <span class="blue">mView.updateRecyclerView()?</span></h3>
 		<p data-jmpress="fade">RecyclerView not bound to data model</p>
@@ -578,7 +565,8 @@ zoomInto($("#no_mvvm_snippet"));
 zoomAndMoveVertically($("#step5"), dy_large, dz_large);
 zoomInto($("#mvp_snippet_fragment"));
 moveVerticallyTo($("#mvp_snippet_viewmodel"), dy_medium);
-zoomAndMoveVertically($("#step8"), dy_large, dz_large);
+zoomAndMoveVertically($("#what_is_databinding"), dy_large, dz_large);
+moveVerticallyTo($("#step8"), dy_large);
 moveVerticallyTo($("#step9"), dy_large);
 moveHorizontallyTo($("#step10"), dx_large);
 moveVerticallyTo($("#step11"), dy_large);
