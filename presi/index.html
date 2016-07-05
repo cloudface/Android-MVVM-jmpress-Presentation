@@ -26,7 +26,10 @@
 <body>
 
 <div id="jmpress">
-	<div id="title" class="step" data-x="0" data-y="0" data-z="0"><h1>Databinding and MVVM in Android</h1></div>
+	<div id="title" class="step" data-x="0" data-y="0" data-z="0">
+		<h1>Databinding and MVVM in Android</h1>
+		<img src="img/android.png"/>
+	</div>
 	<div id="infoNoser" class="step">
 		<h2>About me</h2>
 		<p data-jmpress="fade">Chris Braunschweiler</p>
@@ -66,7 +69,7 @@
     </div>
     <div id="what_is_databinding" class="step">
     	<h2>What is the data binding library?</h2>
-    	<p data-jmpress="fade">Bind view properties to model properties</p>
+    	<p data-jmpress="fade">Bind view properties to model (POJO) properties</p>
     	<p data-jmpress="fade">From XML!</p>
     	<p data-jmpress="fade">Generated classes that synchronize views with model</p>
     	<p data-jmpress="fade">Support library (API level 7+)</p>
@@ -154,7 +157,8 @@
     </div>
     <div id="snippet_settingsVm_loadSettingsHandler" class="step">
     	<pre class="prettyprint lang-java">
-    private class LoadedUserSettingsHandler extends SettingsRepository.SettingsRepositoryListenerAdapter {
+    private class LoadedUserSettingsHandler extends 
+        SettingsRepository.SettingsRepositoryListenerAdapter {
           @Override
          public void onLoadedUserSettings(UserModel userModel) { 
             //..
@@ -193,7 +197,8 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        <span data-jmpress="fade">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
+        <span data-jmpress="fade">ActivitySettingsBinding binding = 
+            DataBindingUtil.setContentView(this, R.layout.activity_settings);
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
         binding.setViewModel(viewModel);</span>
     }
@@ -225,19 +230,19 @@ public class SettingsActivity extends AppCompatActivity {
 				<p data-jmpress="fade">Extend ViewDataBinding class</p>
 			</td>
 			<td>
-				<pre class="prettyprint lang-xml"><span data-jmpress="fade after #generatedBindingTitle">
+				<div data-jmpress="fade after #generatedBindingTitle"><pre class="prettyprint lang-xml">
     &lt;data&gt;
         &lt;variable name="viewModel" type="SettingsViewModel"/&gt;
-    &lt;/data&gt;</span>
-				</pre>
+    &lt;/data&gt;
+				</pre></div>
 			</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>
-				<pre class="prettyprint lang-java"><span data-jmpress="fade after #generatedBindingTitle">
-    binding.setViewModel(viewModel);</span>
-				</pre>
+				<div data-jmpress="fade after #generatedBindingTitle"><pre class="prettyprint lang-java">
+    binding.setViewModel(viewModel);
+				</pre></div>
 			</td>
 		</tr>
 		</table>
@@ -252,7 +257,8 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        <span class="bold">ActivitySettingsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);</span>
+        <span class="bold">ActivitySettingsBinding binding = 
+            DataBindingUtil.setContentView(this, R.layout.activity_settings);</span>
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
         <span class="bold">binding.setViewModel(viewModel);</span>
     }
@@ -538,6 +544,12 @@ public class SettingsActivity extends AppCompatActivity {
     	<h3>Thank You</h3>
     	<p data-jmpress="fade">Questions?</p>
     </div>
+    <div id="credits" class="step">
+    	<h3>Sources</h3>
+    	<a href="http://developer.android.com/tools/data-binding/guide.html">Android Databinding Guide</a><br/>
+    	<a href="https://realm.io/news/data-binding-android-boyar-mount/">Marshmallow Brings Data Bindings to Android</a><br/>
+    	<a href="http://www.rebellovestation.net/wp-content/uploads/2016/04/REL-Android.png">Android Logo</a>
+    </div>
 </div>
 
 <div class="hint">
@@ -630,9 +642,17 @@ moveVerticallyTo($("#snippet_myListVm_purchaseSuccess"), dy_large);
 zoomAndMoveVertically($("#step53"), dy_large, dz_large);
 zoomAndMoveVertically($("#step54"), dy_large, dz_large);
 moveVerticallyTo($("#step55"), dy_large);
+moveVerticallyTo($("#credits"), dy_large);
 
 $(function() {
 	$('#jmpress').jmpress();
+});
+
+$("*").each( function () {
+    var $this = $(this);
+    if (parseInt($this.css("fontSize")) < 16) {
+        $this.css({ "font-size": "16px" });   
+    }
 });
 
 $(document).keyup(function(e) {
