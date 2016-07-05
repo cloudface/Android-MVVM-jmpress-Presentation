@@ -39,16 +39,15 @@
 	</div>
 	<div id="contents" class="step">
 		<h2>Contents</h2>
-		<p data-jmpress="fade">Traditional approach</p>
+		<p data-jmpress="fade">Traditional approach to UI architecture</p>
 		<p data-jmpress="fade">What is the databinding library?</p>
-		<p data-jmpress="fade">What is MVVM?</p>
-		<p data-jmpress="fade">UI state in ViewModels <span data-jmpress="fade">; Boilerplate in Activity/Fragment</span></p>
-		<p data-jmpress="fade">Databinding expressions</p>
-		<p data-jmpress="fade">Under the hood</p>
-		<p data-jmpress="fade">Databinding with RecyclerViews</p>
-		<p data-jmpress="fade">MVVM as powerful pattern (alternative to MVP)</p>
+		<p data-jmpress="fade">What is Model-View-ViewModel?</p>
+		<p data-jmpress="fade">Presentation and state logic in ViewModels</p>
+		<p data-jmpress="fade">Boilerplate in Activity/Fragment</p>
+		<p data-jmpress="fade">Databinding and MVVM with RecyclerViews</p>
 	</div>
 	<div id="step3" class="step">
+		<h2>Traditional approach to UI architecture</h2>
 		<div class="diagram"><img src="img/diagrams/activity_fragment.png"/></div>
 	</div>
     <div id="no_mvvm_snippet" class="step">
@@ -93,7 +92,15 @@
     	</div>
     </div>
     <div id="step8" class="step">
+    	<h2>What is Model-View-ViewModel?</h2>
     	<div class="diagram"><img src="img/diagrams/mvvm_complete.png"/></div>
+    </div>
+    <div id="caseStudy1" class="step">
+    	<h2>Our first example</h2>
+    	<p data-jmpress="fade">Our first view model</p>
+		<p data-jmpress="fade">View Model models and manipulates state</p>
+		<p data-jmpress="fade">Databinding library synchronizes view model with View</p>
+		<p data-jmpress="fade">Reduced boilerplate in Activity/Fragment</p>
     </div>
     <div id="step9" class="step">
     	<div class="screenshot"><img src="img/screenshots/search.png"/></div>
@@ -209,20 +216,14 @@ public class SettingsActivity extends AppCompatActivity {
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
         binding.setViewModel(viewModel);</span>
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        <span data-jmpress="fade">viewModel.onResume();</span>
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        <span data-jmpress="fade">viewModel.onPause();</span>
-    }
 }
 		</pre>
+    </div>
+    <div id="benefits1" class="step">
+    	<h2>What are the benefits?</h2>
+	    <p data-jmpress="fade">Presentation logic encapsulated in ViewModel</p>
+    	<p data-jmpress="fade">Activity has no presentation logic</p>
+    	<p data-jmpress="fade">No <span class="bold">findViewById()</span> in our Activity</p>
     </div>
     <div id="databinding_under_the_hood" class="step">
     	<div class="screenshot"><img src="img/diagrams/databinding_under_the_hood.png"/></div>
@@ -269,23 +270,18 @@ public class SettingsActivity extends AppCompatActivity {
         viewModel = new SettingsViewModel(new PreferencesSettingsRepository());
         <span class="bold">binding.setViewModel(viewModel);</span>
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        viewModel.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        viewModel.onPause();
-    }
 }
 		</pre>
     </div>
     <div id="step24" class="step">
     	<p>Settings Demo</p>
+    </div>
+    <div id="caseStudy2" class="step">
+    	<h2>Our second example</h2>
+		<p data-jmpress="fade">View Model models and manipulates state</p>
+		<p data-jmpress="fade">Databinding library notifies View Model of events on UI</p>
+		<p data-jmpress="fade">How databinding library integrates with RecyclerViews</p>
+		<p data-jmpress="fade">Reduced boilerplate in RecyclerView Adapter</p>
     </div>
     <!--TODO: Show screenshots of workflow with empty list and refresh button leading to list-->
     <div id="step25" class="step">
@@ -366,57 +362,24 @@ public class SettingsActivity extends AppCompatActivity {
     	</pre>
     </div>
     <div id="snippet_myListVm_loadedHandler" class="step">
-    	<table><tr>
-    		<td rowspan="2" width="70%">
+    	
     				<pre class="prettyprint lang-java">
     public class LoadedMyListHandler implements ...{  
         @Override 
         public void onLoadedMyList(List<SongDto> songs) {
              <span id="snippet_lines_setLoading" data-jmpress="fade">setLoading(false);</span>
-              <span id="snippet_lines_headerItem" data-jmpress="fade after #snippet_lines_setLoading">//Build item models using the retrieved songs 
-            //Add a header item 
-            MyListItemModel headerItem = new MyListItemModel(this);
-             headerItem.setItemType(MyListItemModel.ItemType.HEADER); 
-            headerItem.setTitle("My Songs"); 
-            mMyItems.add(headerItem);  </span>
-
-			<span id="snippet_lines_resultItems" data-jmpress="fade after #snippet_lines_headerItem">
-            //Add items for each song 
-            for(SongDto song : songs){ 
-                MyListItemModel songItem = new MyListItemModel(this); 
-                songItem.setSong(song);
-                 songItem.setItemType(MyListItemModel.ItemType.RESULT); 
-                mMyItems.add(songItem); 
-            } </span>
+              <span id="snippet_lines_headerItem" data-jmpress="fade after #snippet_lines_setLoading">//Build item models using the retrieved songs ...</span>
             <span class="bold" data-jmpress="fade after #snippet_lines_resultItems">mView.updateRecyclerView(); </span>
         }
           //... 
     }
     			</pre>
-    		</td><td width="30%">
-    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_setLoading"><img src="img/diagrams/header_item.png"/></span></div>
-    		</td>
-    	</tr><tr>
-    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_headerItem"><img src="img/diagrams/regular_item.png"/></span></div></td>
-    	</tr></table>
     </div>
     <div id="step32" class="step">
     	<h2>Why is there a call to <span class="blue">mView.updateRecyclerView()?</span></h3>
     </div>
     <div id="step33" class="step">
     	<div class="diagram"><img src="img/diagrams/mylist.png"/></div>
-    </div>
-    <div id="snippet_myListFragment_configRecView" class="step">
-    	<p>MyListFragment:</p>
-    	<pre class="prettyprint lang-java">
-        private void configureRecyclerView() {
-            <span data-jmpress="fade">mRecyclerView.setHasFixedSize(true);
-            mLayoutManager = new LinearLayoutManager(getActivity()); 
-            mRecyclerView.setLayoutManager(mLayoutManager);</span>
-            <span data-jmpress="fade"><span class="bold">mMyListAdapter = new MyListAdapter(mViewModel.getMyItems());</span>
-            mRecyclerView.setAdapter(mMyListAdapter);</span>
-        }    
-		</pre>
     </div>
     <div id="snippet_myListAdapter_createViewHolder_simple" class="step">
     	<p>MyListAdapter:</p>
@@ -537,22 +500,28 @@ public class SettingsActivity extends AppCompatActivity {
 		<p data-jmpress="fade">RecyclerView's <span class="bold">data adapter is bound to the data model</span></p>
 		<p data-jmpress="fade"><span class="bold">notifyDataSetChanged</span> required when adding items</p>
     </div>
+    <div id="benefits2" class="step">
+    	<h2>What are the benefits?</h2>
+    	<p data-jmpress="fade">Much simpler Adapter (no manual binding of views to data)</p>
+    	<p data-jmpress="fade">We can modify row layouts/models without touching Adapter</p>
+    </div>
     <div id="step41" class="step">
     	Demo My List
     </div>
     <div id="step54" class="step">
-    	<h3>Recap</h3>
-    	<p data-jmpress="fade">View Model models state of view</p>
-		<p data-jmpress="fade">Databinding library creates binding between view and view model through generated ViewDataBinding classes</p>
+    	<h2>Recap</h2>
+	    <p data-jmpress="fade">What is the databinding library?</p>
+	    <p data-jmpress="fade">What is Model-View-ViewModel?</p>
+    	<p data-jmpress="fade">ViewModel encapsulates presentation logic and view's state</p>
 		<p data-jmpress="fade">Removes a lot of boilerplate</p>
 		<p data-jmpress="fade">Some interactions still require View interface (MVP)</p>
     </div>
     <div id="step55" class="step">
-    	<h3>Thank You</h3>
+    	<h2>Thank You</h2>
     	<p data-jmpress="fade">Questions?</p>
     </div>
     <div id="credits" class="step">
-    	<h3>Sources</h3>
+    	<h2>Sources</h2>
     	<a href="http://developer.android.com/tools/data-binding/guide.html">Android Databinding Guide</a><br/>
     	<a href="https://realm.io/news/data-binding-android-boyar-mount/">Marshmallow Brings Data Bindings to Android</a><br/>
     	<a href="http://www.rebellovestation.net/wp-content/uploads/2016/04/REL-Android.png">Android Logo</a>
@@ -586,6 +555,7 @@ zoomInto($("#mvp_snippet_fragment"));
 moveVerticallyTo($("#mvp_snippet_viewmodel"), dy_medium);
 zoomAndMoveVertically($("#what_is_databinding"), dy_large, dz_large);
 moveVerticallyTo($("#step8"), dy_large);
+moveVerticallyTo($("#caseStudy1"), dy_large);
 moveVerticallyTo($("#step9"), dy_large);
 moveHorizontallyTo($("#step10"), dx_large);
 moveVerticallyTo($("#step11"), dy_large);
@@ -603,11 +573,13 @@ moveVerticallyTo($("#snippet_settingsVm_notifyProperty"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_baseObservable"), dy_medium);
 moveVerticallyTo($("#snippet_settingsVm_bindable"), dy_medium);
 moveHorizontallyTo($("#snippet_settingsActivity"), dx_large);
+moveVerticallyTo($("#benefits1"), dy_medium);
 moveVerticallyTo($("#databinding_under_the_hood"), dy_medium);
 moveVerticallyTo($("#viewDataBinding_class"), dy_medium);
 moveVerticallyTo($("#snippet_settingsActivity_under_the_hood"), dy_medium);
 zoomAndMoveVertically($("#step24"), dy_large, dz_large);
-zoomAndMoveVertically($("#step25"), dy_large, dz_large);
+zoomAndMoveVertically($("#caseStudy2"), dy_large, dz_large);
+moveVerticallyTo($("#step25"), 0);
 moveVerticallyTo($("#mylist_empty"), 0);
 moveVerticallyTo($("#mylist_loading"), 0);
 moveVerticallyTo($("#mylist_loaded"), 0);
@@ -622,8 +594,7 @@ moveVerticallyTo($("#snippet_myListVm_loadedHandler"), dy_medium);
 //After we rotate, the x and y axis are switched so to move down we have to call moveHorizontally and vice versa.
 rotateAndMoveTo($("#step32"), dx_large, 0, 0,-90);
 moveHorizontallyTo($("#step33"), dy_large);
-zoomAndMoveTo($("#snippet_myListFragment_configRecView"), -20, 150, -dz_large);
-moveVerticallyTo($("#snippet_myListAdapter_createViewHolder_simple"), -dx_large);
+zoomAndMoveTo($("#snippet_myListAdapter_createViewHolder_simple"), 0, 0, -dz_large);
 moveHorizontallyTo($("#recycler_rows_under_the_hood"), dy_large);
 moveHorizontallyTo($("#snippet_myListAdapter_createViewHolder"), dy_large);
 moveHorizontallyTo($("#snippet_bindingViewHolder"), dy_large);
@@ -634,7 +605,8 @@ zoomAndMoveTo($("#snippet_myListAdapter_bindingItem"), 0, 0, dz_large);
 moveHorizontallyTo($("#step40"), dy_large);
 
 //Rotate back to the normal axes
-rotateAndMoveTo($("#step41"), 500, 1500, dz_large, 0);
+rotateAndMoveTo($("#benefits2"), 500, 1500, dz_large, 0);
+moveVerticallyTo($("#step41"), dy_medium);
 zoomAndMoveVertically($("#step42"), dy_large, dz_large);
 moveVerticallyTo($("#step43"), 0);
 moveVerticallyTo($("#step44"), 0);
