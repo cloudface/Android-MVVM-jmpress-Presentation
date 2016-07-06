@@ -43,8 +43,12 @@
 		<p data-jmpress="fade">What is the databinding library?</p>
 		<p data-jmpress="fade">What is Model-View-ViewModel?</p>
 		<p data-jmpress="fade">Presentation and state logic in ViewModels</p>
-		<p data-jmpress="fade">Boilerplate in Activity/Fragment</p>
-		<p data-jmpress="fade">Databinding and MVVM with RecyclerViews</p>
+		<p data-jmpress="fade">Reduce complexity in Activity/Fragment</p>
+		<p data-jmpress="fade">Examples</p>
+		<ul>
+			<li data-jmpress="fade">Databinding and MVVM with standard views</li>
+			<li data-jmpress="fade">Databinding and MVVM with RecyclerViews</li>
+		</ul>
 	</div>
 	<div id="step3" class="step">
 		<h2>Traditional approach to UI architecture</h2>
@@ -100,7 +104,7 @@
     	<p data-jmpress="fade">Our first view model</p>
 		<p data-jmpress="fade">View Model models and manipulates state</p>
 		<p data-jmpress="fade">Databinding library synchronizes view model with View</p>
-		<p data-jmpress="fade">Reduced boilerplate in Activity/Fragment</p>
+		<p data-jmpress="fade">Reduced complexity in Activity/Fragment</p>
     </div>
     <div id="step9" class="step">
     	<div class="screenshot"><img src="img/screenshots/search.png"/></div>
@@ -223,10 +227,31 @@ public class SettingsActivity extends AppCompatActivity {
     	<h2>What are the benefits?</h2>
 	    <p data-jmpress="fade">Presentation logic encapsulated in ViewModel</p>
     	<p data-jmpress="fade">Activity has no presentation logic</p>
-    	<p data-jmpress="fade">No <span class="bold">findViewById()</span> in our Activity</p>
+    	<p data-jmpress="fade">Very little Android boilerplate in our Activity</p>
+    	<div data-jmpress="fade">
+    	<pre class="prettyprint lang-java">
+    ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    TextView messageText = (TextView) findViewById(R.id.loginButton);	
+		</pre>
+    	</div>
+    	<div data-jmpress="fade">
+    	<pre class="prettyprint lang-java">
+    if(isLoading()) {
+        progressBar.setVisibility(View.VISIBLE);
+    } else {
+        progressBar.setVisibility(View.GONE);
+    }
+		</pre>
+    	</div>
+    	<div data-jmpress="fade">
+    	<pre class="prettyprint lang-java">
+    messageText.setText(model.getMessage());
+		</pre>
+    	</div>
     </div>
     <div id="databinding_under_the_hood" class="step">
-    	<div class="screenshot"><img src="img/diagrams/databinding_under_the_hood.png"/></div>
+    	<h2>How does it work?</h2>
+    	<div class="diagram"><img class="small" src="img/diagrams/databinding_under_the_hood.png"/></div>
     </div>
     <div id="viewDataBinding_class" class="step">
 	    <h2 id="generatedBindingTitle" data-jmpress="fade">Generated data binding classes</h3>
@@ -281,7 +306,7 @@ public class SettingsActivity extends AppCompatActivity {
 		<p data-jmpress="fade">View Model models and manipulates state</p>
 		<p data-jmpress="fade">Databinding library notifies View Model of events on UI</p>
 		<p data-jmpress="fade">How databinding library integrates with RecyclerViews</p>
-		<p data-jmpress="fade">Reduced boilerplate in RecyclerView Adapter</p>
+		<p data-jmpress="fade">Reduced complexity in RecyclerView Adapter</p>
     </div>
     <!--TODO: Show screenshots of workflow with empty list and refresh button leading to list-->
     <div id="step25" class="step">
@@ -383,74 +408,37 @@ public class SettingsActivity extends AppCompatActivity {
     </div>
     <div id="snippet_myListAdapter_createViewHolder_simple" class="step">
     	<p>MyListAdapter:</p>
-    	<table><tr>
-    		<td rowspan="2" width="70%">
+    	
+    	
     			<pre class="prettyprint lang-java">
     @Override
      public BindingViewHolder<ViewDataBinding> onCreateViewHolder(ViewGroup parent, int viewType) { 
-        ViewDataBinding binding; 
-        <span id="snippet_lines_onCreateViewHolder" data-jmpress="fade">MyListItemModel.ItemType itemType = MyListItemModel.
-        ItemType.values()[viewType];
-         switch (itemType) {</span>
-             <span id="snippet_lines_caseHeader" data-jmpress="fade after #snippet_lines_onCreateViewHolder">case HEADER:
-                //...
-                <span class="bold">R.layout.item_mylist_header</span>
-                //..
-                break; </span>
-            <span data-jmpress="fade after #snippet_lines_caseHeader">default: 
-                //...
-                <span class="bold">R.layout.item_mylist_result</span>
-                //...
-                 break;</span>
+            //...
+            <span data-jmpress="fade" class="bold">R.layout.item_mylist_result</span>
+             //...
          }
          return ...; 
     }
     			</pre>
-    		</td><td width="30%">
-    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_onCreateViewHolder"><img src="img/diagrams/header_item.png"/></span></div>
-    		</td>
-    	</tr><tr>
-    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
-    	</tr></table>
     </div>
     <div id="recycler_rows_under_the_hood" class="step">
-    	<div class="diagram"><img src="img/diagrams/recycler_view_databinding_under_the_hood.png"/></div>
+    	<div class="diagram"><img src="img/diagrams/recycler_view_databinding_simplified.png"/></div>
     </div>
     <div id="snippet_myListAdapter_createViewHolder" class="step">
     	<p>MyListAdapter:</p>
-    	<table><tr>
-    		<td rowspan="2" width="70%">
     			<pre class="prettyprint lang-java">
     @Override
      public BindingViewHolder<ViewDataBinding> onCreateViewHolder(ViewGroup parent, int viewType) { 
         ViewDataBinding binding; 
-        <span id="snippet_lines_onCreateViewHolder" data-jmpress="fade">MyListItemModel.ItemType itemType = MyListItemModel.
-        ItemType.values()[viewType];
-         switch (itemType) {</span>
-             <span id="snippet_lines_caseHeader" data-jmpress="fade after #snippet_lines_onCreateViewHolder">case HEADER:
-                 binding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.getContext()),
-                    <span class="bold">R.layout.item_mylist_header</span>, 
-                    parent, 
-                    false); 
-                break; </span>
-            <span data-jmpress="fade after #snippet_lines_caseHeader">default: 
-                binding = DataBindingUtil.inflate(
+        <span data-jmpress="fade after #snippet_lines_caseHeader"> binding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.getContext()),
                     <span class="bold">R.layout.item_mylist_result</span>, 
                     parent, 
-                    false);
-                 break;</span>
+                    false);</span>
          }
          return new BindingViewHolder<>(binding); 
     }
     			</pre>
-    		</td><td width="30%">
-    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_onCreateViewHolder"><img src="img/diagrams/header_item.png"/></span></div>
-    		</td>
-    	</tr><tr>
-    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseHeader"><img src="img/diagrams/regular_item.png"/></span></div></td>
-    	</tr></table>
     </div>
     <div id="snippet_bindingViewHolder" class="step">
     	<p>BindingViewHolder:</p>
@@ -470,29 +458,14 @@ public class SettingsActivity extends AppCompatActivity {
     			</pre>
     </div>
     <div id="snippet_myListAdapter_onBindViewHolder" class="step">
-    	<table><tr>
-    		<td rowspan="2" width="70%">
     			<pre class="prettyprint lang-java">
             @Override
              public void onBindViewHolder(BindingViewHolder<T> holder, int position) {
-                <span id="snippet_lines_bindViewHolder" data-jmpress="fade">T binding = holder.getBinding(); 
-                MyListItemModel item = mItems.get(position);
-                 switch (item.getItemType()) { 
-                    <span id="snippet_lines_caseBindHeader" data-jmpress="fade after #snippet_lines_bindViewHolder">case HEADER:
-                         ((<span class="bold">ItemMylistHeaderBinding</span>) binding).setItem(item); 
-                        break;</span>
-                     <span data-jmpress="fade after #snippet_lines_caseBindHeader"> default: 
-                        ((<span class="bold">ItemMylistResultBinding</span>) binding).setItem(item);
-                         break; </span>
-                }</span>
+                <span data-jmpress="fade">ViewDataBinding binding = holder.getBinding();</span>
+                <span data-jmpress="fade">MyListItemModel item = mItems.get(position);</span>
+                <span data-jmpress="fade">((<span class="bold">ItemMylistResultBinding</span>) binding).setItem(item);</span>
              }
     			</pre>
-    		</td><td width="30%">
-    			<div class="diagram"><span data-jmpress="fade after #snippet_lines_bindViewHolder"><img src="img/diagrams/header_item_with_binding.png"/></span></div>
-    		</td>
-    	</tr><tr>
-    		<td height="70%"><div class="diagram"><span data-jmpress="fade after #snippet_lines_caseBindHeader"><img src="img/diagrams/result_item_with_binding.png"/></span></div></td>
-    	</tr></table>
     </div>
     <div id="step40" class="step">
 		<h2>Why is there a call to <span class="blue">mView.updateRecyclerView()?</span></h3>
@@ -503,6 +476,25 @@ public class SettingsActivity extends AppCompatActivity {
     <div id="benefits2" class="step">
     	<h2>What are the benefits?</h2>
     	<p data-jmpress="fade">Much simpler Adapter (no manual binding of views to data)</p>
+    	<div data-jmpress="fade">
+    	<pre class="prettyprint lang-java">
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        MyListItemModel item = mItems.get(position);
+        
+        holder.infoText.setText(item.getInfo());
+        if(item.getStatus() == ItemStatus.SUCCESS){
+            holder.statusImage.setImageDrawable(...);
+            holder.errorImage.setVisibility(View.GONE);
+        } else {
+            holder.statusImage.setImageDrawable(...);
+            holder.errorImage.setVisibility(View.VISIBLE);
+        }
+        holder.descriptionText.setText(item.getDescription());
+        holder.statusText.setText(item.getStatusText());
+    }
+    			</pre>
+    	</div>
     	<p data-jmpress="fade">We can modify row layouts/models without touching Adapter</p>
     </div>
     <div id="step41" class="step">
@@ -513,8 +505,7 @@ public class SettingsActivity extends AppCompatActivity {
 	    <p data-jmpress="fade">What is the databinding library?</p>
 	    <p data-jmpress="fade">What is Model-View-ViewModel?</p>
     	<p data-jmpress="fade">ViewModel encapsulates presentation logic and view's state</p>
-		<p data-jmpress="fade">Removes a lot of boilerplate</p>
-		<p data-jmpress="fade">Some interactions still require View interface (MVP)</p>
+		<p data-jmpress="fade">Removes a lot of complexity</p>
     </div>
     <div id="step55" class="step">
     	<h2>Thank You</h2>
