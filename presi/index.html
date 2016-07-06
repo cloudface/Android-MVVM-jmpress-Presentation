@@ -406,6 +406,18 @@ public class SettingsActivity extends AppCompatActivity {
     <div id="step33" class="step">
     	<div class="diagram"><img src="img/diagrams/mylist.png"/></div>
     </div>
+    <div id="snippet_myListFragment_configRecView" class="step">
+     	<p>MyListFragment:</p>
+     	<pre class="prettyprint lang-java">
+         private void configureRecyclerView() {
+             <span data-jmpress="fade">mRecyclerView.setHasFixedSize(true);
+             mLayoutManager = new LinearLayoutManager(getActivity()); 
+             mRecyclerView.setLayoutManager(mLayoutManager);</span>
+             <span data-jmpress="fade"><span class="bold">mMyListAdapter = new MyListAdapter(mViewModel.getMyItems());</span>
+             mRecyclerView.setAdapter(mMyListAdapter);</span>
+         }    
+ 		</pre>
+    </div>
     <div id="snippet_myListAdapter_createViewHolder_simple" class="step">
     	<p>MyListAdapter:</p>
     	
@@ -585,7 +597,8 @@ moveVerticallyTo($("#snippet_myListVm_loadedHandler"), dy_medium);
 //After we rotate, the x and y axis are switched so to move down we have to call moveHorizontally and vice versa.
 rotateAndMoveTo($("#step32"), dx_large, 0, 0,-90);
 moveHorizontallyTo($("#step33"), dy_large);
-zoomAndMoveTo($("#snippet_myListAdapter_createViewHolder_simple"), 0, 0, -dz_large);
+zoomAndMoveTo($("#snippet_myListFragment_configRecView"), -20, 150, -dz_large);
+moveVerticallyTo($("#snippet_myListAdapter_createViewHolder_simple"), -dx_large);
 moveHorizontallyTo($("#recycler_rows_under_the_hood"), dy_large);
 moveHorizontallyTo($("#snippet_myListAdapter_createViewHolder"), dy_large);
 moveHorizontallyTo($("#snippet_bindingViewHolder"), dy_large);
@@ -620,8 +633,8 @@ $(function() {
 
 $("*").each( function () {
     var $this = $(this);
-    if (parseInt($this.css("fontSize")) < 16) {
-        $this.css({ "font-size": "16px" });   
+    if (parseInt($this.css("fontSize")) < 20) {
+        $this.css({ "font-size": "20px" });   
     }
 });
 
